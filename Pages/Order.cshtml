@@ -1,0 +1,89 @@
+﻿@page "{id:int}"
+@model OrderModel
+@{
+    ViewData["title"] = "place your order";
+}
+<h1>
+    Place Your Order : @Model.product.product_name
+</h1>
+<form method="post">
+    <div class="col-3">
+        <img  class="img-fluid rounded img-thumbnail" src="~/images/@Model.product.imagename"
+             alt="Image of @Model.product.product_name" />
+    </div>
+    <div class="col-9">
+        <ul data-role="listview">
+            <li>
+                <div>
+                    <p>
+                        @Model.product.description
+                    </p>
+                </div>
+            </li>
+            <li class="email">
+                <div class="form-group">
+                    <label asp-for="OrderEmail"></label>
+                    <input asp-for="OrderEmail" class="form-control" />
+                    <span asp-validation-for="OrderEmail"></span>
+                </div>
+            </li>
+            <li class="Ordershipping">
+                <div class="form-group">
+                    <label asp-for="OrderShipping"></label>
+                    <textarea asp-for="OrderShipping" class="form-control"></textarea>
+                    <span asp-validation-for="OrderShipping"></span>
+                </div>
+
+            </li>
+            <li class="quantity">
+                <div class="form-group">
+                    <label asp-for="OrderQuantity" class="col-1 col-form-label"></label>
+                    <input asp-for="OrderQuantity" class="form-control form-control-sm" />
+                    X
+                    <span id="orderprice">
+                        @Model.product.price.ToString("f")
+                    </span>
+                    =
+                    <span id="ordertotal">
+                        @Model.product.price.ToString("f")
+                    </span>
+                    <span asp-validation-for="OrderQuantity"></span>
+                    </div>
+            </li>
+          </ul>
+            <button class="btn-danger">
+                Place Order
+            </button>
+</div>
+
+
+</form>
+@section scripts
+{
+<script type="text/javascript">
+    $(function () {
+        //get 3 values of price , total , quntity from html form
+        var price = parseFloat($("#orderprice").text()).toFixed(2),
+            total = $("#ordertotal"),
+            orderquant = $("#OrderQuantity");
+        var quantity;
+        orderquant.on('change', function () {
+             //read current quantity 
+            quantity = parseInt(orderquant.val());
+        if (!quantity || quantity < 1)
+        {
+            orderquant.val(1);
+            quantity = 1;
+        }
+        else if (quantity.tostring() !== orderquant.val())
+        {
+            orderquant.val(quantity);
+        }
+        total.text("$" + (price * quantity).toFixed(2))
+        });
+    });
+</script>
+}
+
+
+
